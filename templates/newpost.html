@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class='header'>Add Post</h1>
+
+<form action='/newpost' method='post'>
+    <label for='Post_Title'>Post Title :</label>
+    <br>
+    <input id='Post_Title' type='text' name='title'/>
+    <p class='error'>{{title_error}}</p>
+    <br>
+    <label for='Post_Body'>Post Body :</label>
+    <br>
+    <textarea rows='4' cols='50' id='Post_Body' name='body' ></textarea>
+    <p class='error'>{{body_error}}</p>
+
+    <input type='submit' />
+
+</form>
+
+{% endblock %}

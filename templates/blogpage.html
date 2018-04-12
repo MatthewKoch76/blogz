@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1 class='header'>Build a Blog</h1>
+<br />
+<ul>
+    {% for Blog in post %}
+    <li>{{post}}</li>
+    {% endfor %}
+</ul>
 
-<form action='/' method='POST'>
-    <label for='Post_Title'>Post Title :</label>
-    <input id='Post_Title' name='Post_Title' type='text' />
-
-</form>
 
 {% endblock %}
