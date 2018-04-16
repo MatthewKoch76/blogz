@@ -13,7 +13,6 @@ class Blog(db.Model):
     body = db.Column(db.String(255))
 
     def __init__(self, title, body):
-        #self.id = id
         self.title = title
         self.body = body
 
@@ -24,20 +23,13 @@ def index():
 @app.route('/blog', methods=['POST','GET'])
 def blog():
 
-    post_id = request.args.get('posts.id')
     posts = Blog.query.all()
-    one_post = Blog.query.get(Blog.id)
-
-    if request.method=='POST':
-       
-        
-        if not post_id:
-            return render_template('blogpage.html', posts=posts)
-        else:
-            return redirect("/?blog=" + one_post)
-    return render_template('blogpage.html', posts=posts)
-
-   
+    post_id =request.args.get('id')
+    onepost = Blog.query.filter_by(id=post_id).all()
+    if not post_id:
+        return render_template('blogpage.html', posts=posts)
+    else:
+        return render_template('blogpage.html', posts=onepost)
 
 @app.route('/newpost', methods=['GET','POST'])
 def newpost():
