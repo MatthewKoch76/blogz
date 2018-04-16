@@ -13,18 +13,31 @@ class Blog(db.Model):
     body = db.Column(db.String(255))
 
     def __init__(self, title, body):
+        #self.id = id
         self.title = title
         self.body = body
-
 
 @app.route('/')
 def index():
     return render_template('blogpage.html')
 
-@app.route('/blog')
+@app.route('/blog', methods=['POST','GET'])
 def blog():
-    
-    return render_template('blogpage.html')
+
+    post_id = request.args.get('posts.id')
+    posts = Blog.query.all()
+    one_post = Blog.query.get(Blog.id)
+
+    if request.method=='POST':
+       
+        
+        if not post_id:
+            return render_template('blogpage.html', posts=posts)
+        else:
+            return redirect("/?blog=" + one_post)
+    return render_template('blogpage.html', posts=posts)
+
+   
 
 @app.route('/newpost', methods=['GET','POST'])
 def newpost():
@@ -47,8 +60,8 @@ def newpost():
             
                 db.session.add(new_post)
                 db.session.commit()
-                post = Blog.query.all()
-                return render_template('blogpage.html', post=post)
+                posts = Blog.query.all()
+                return render_template('blogpage.html', posts=posts)
 
         return render_template('newpost.html', title=title, title_error=title_error, body=body, body_error=body_error)
 
