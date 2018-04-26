@@ -29,6 +29,9 @@ class User(db.Model):
         self.username = username
         self.password = password
 
+    def __repr__(self):
+        return self.username
+
 @app.before_request
 def require_login():
     allowed_routes = ['login', 'register','blog','index']
@@ -52,7 +55,7 @@ def login():
             return render_template('newpost.html')
         else:
         
-            flash('User password incorrect, or user does not exist')#, 'error')
+            flash('User password incorrect, or user does not exist')
 
     return render_template('login.html')
 
@@ -65,26 +68,38 @@ def register():
         verify = request.form['verify']
 
         existing_user = User.query.filter_by(username=username).first()
-        if not existing_user:
-            new_user = User(username, password)
-            db.session.add(new_user)
-            db.session.commit()
-            session['username'] = username
-            return redirect('/')
-        else:
-            return "<h1>Duplicate user</h1>"
+        if password == verify:
 
+            if not existing_user:
+                new_user = User(username, password)
+                db.session.add(new_user)
+                db.session.commit()
+                session['username'] = username
+                return redirect('/')
+            else:
+         
+                return "<h1>Duplicate user</h1>"
+        else:
+            flash('passwords must match') 
+            return render_template('signup.html')
     return render_template('signup.html')
 
 @app.route('/blog', methods=['POST','GET'])
 def blog():
     posts = Blog.query.all()
-    post_id =request.args.get('id')
+    users = User.query.all()
+    post_id = request.args.get('id')
+    user_id = request.args.get('user')
     onepost = Blog.query.filter_by(id=post_id).all()
-    if not post_id:
-        return render_template('blogpage.html', posts=posts)
+    user = Blog.query.filter_by(owner_id=user_id).all()
+    author = User.query.filter_by(id=user_id).all()
+
+    if post_id:
+        return render_template('blogpage.html', posts=onepost, author=author)
+    elif user_id:
+        return render_template('singleuser.html', posts=user, author=author)
     else:
-        return render_template('blogpage.html', posts=onepost)
+        return render_template('blogpage.html', posts=posts, users=users, author=author)
 
 @app.route('/newpost', methods=['GET','POST'])
 def newpost():
@@ -109,6 +124,7 @@ def newpost():
                 db.session.add(new_post)
                 db.session.commit()
                 post_id = str(new_post.id)
+                #user_id = str(new_post.owner_id)
  
                 return redirect('/blog?id='+post_id)
 

@@ -5,11 +5,11 @@
 <br />
 <ul>
     {% for post in posts %}
-    <li><a href='/blog?id={{post.id}}'> {{post.title}} </a> <br>
+    <li><a href='/blog?user={{post.owner_id}}'> {{post.title}} </a> <br>
 
     {{post.body}}<br>
     
-    <P>Written by {{post.username}}</P>
+    <P>Written by <a href='/blog?user={{post.owner_id}}'>{{post.owner.username}}</a></P>
 
     </li>
     <br />
