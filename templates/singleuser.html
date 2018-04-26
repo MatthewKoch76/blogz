@@ -1,11 +1,10 @@
 {% extends "base.html" %}
-
 {% block content %}
 <h1 class='header'>Blogz</h1>
 <br />
 <ul>
     {% for post in posts %}
-    <li><a href='/blog?user={{post.owner_id}}'> {{post.title}} </a> <br>
+    <li><a href='/blog?id={{post.id}}'> {{post.title}} </a> <br>
 
     {{post.body}}<br>
     

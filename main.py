@@ -69,8 +69,11 @@ def register():
 
         existing_user = User.query.filter_by(username=username).first()
         if password == verify:
+            if not username:
+                flash('nice try bud')
+                return render_template('/signup.html')
 
-            if not existing_user:
+            elif not existing_user:
                 new_user = User(username, password)
                 db.session.add(new_user)
                 db.session.commit()
